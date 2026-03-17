@@ -31,7 +31,7 @@ npm install
 executar o backend da aplicação:
 
 ``` 
-node index.js
+node --env-file=.env index.js
 
 ```
 
