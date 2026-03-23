@@ -6,6 +6,7 @@ const authenticateUser = require('../middleware/authenticateUser');
 
 router.get('/', itensController.getAllItens);
 router.post('/', authenticateUser ,itensController.addItem);
-router.delete('/:id', authenticateUser, itensController.deleteItem); // test route
+router.put('/:id', authenticateUser ,itensController.updateItem);
+router.delete('/:id', authenticateUser, itensController.deleteItem);
 
 module.exports = router;

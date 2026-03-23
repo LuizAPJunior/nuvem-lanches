@@ -5,7 +5,7 @@ app.use(express.json());
 
 
 app.use('/carrinho', require('./routes/carrinhoRoutes'));
-app.use('/', require('./routes/itensRoutes'));
+app.use('/itens', require('./routes/itensRoutes'));
 app.use('/', require('./routes/authRoutes'));
 
 

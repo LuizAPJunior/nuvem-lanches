@@ -29,8 +29,42 @@ exports.addItem = async (nome, preco, categoria, descricao, disponibilidade, ima
   return data;
 };
 
-exports.deleteItem = async (itemId) => {
-  const { data, error } = await supabase.from('itens').delete().eq('id', itemId);
+
+exports.updateItem = async (itemId, nome, preco, categoria, descricao, disponibilidade, imagem_url, userToken ) => {
+  
+  const supabaseClient = supabaseJS.createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY,
+    {
+      global: {
+        headers: { Authorization: `Bearer ${userToken}` },
+      },
+    }
+  );
+
+  const { data, error } = await supabaseClient
+  .from('itens')
+  .update({nome, preco, categoria, descricao, disponibilidade, imagem_url})
+  .eq('id', itemId)
+  .select();
+  if (error) throw error;
+  return data;
+
+}
+
+exports.deleteItem = async (itemId, userToken) => {
+
+  const supabaseClient = supabaseJS.createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY,
+    {
+      global: {
+        headers: { Authorization: `Bearer ${userToken}` },
+      },
+    }
+  );
+
+  const { data, error } = await supabaseClient.from('itens').delete().eq('id', itemId);
   if (error) throw error;
   return data;
 };
