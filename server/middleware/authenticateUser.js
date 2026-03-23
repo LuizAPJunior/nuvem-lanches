@@ -23,6 +23,8 @@ const authenticateUser = (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
 
+  if (!token) return res.status(401).json({ error: 'token não fornecido' });
+
   jwt.verify(token, getKey, { algorithms: ['ES256'] }, (err, decoded) => {
     if (err) {
       console.error('verificação do token falhou:', err);
