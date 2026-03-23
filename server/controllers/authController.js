@@ -29,21 +29,4 @@ exports.login = catchAsync(async (req, res) => {
   });
 });
 
-exports.logout = catchAsync(async (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  console.log(token);
-  
-  if (!token){ 
-    console.log('are you no here?');
-    
-    return res.status(401).json({ error: 'token não fornecido' });}
 
-  try {
-    await authService.signOut(token);
-  } catch (error) {
-    if (error.code === 'bad_jwt') return res.status(403).json({ error: 'token inválido' });
-    return res.status(401).json({ error: error.message });
-  }
-
-  res.json({ message: 'Deslogado!' });
-});

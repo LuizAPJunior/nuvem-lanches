@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
-
+s
 app.use(express.json());
+
 
 app.use('/carrinho', require('./routes/carrinhoRoutes'));
 app.use('/', require('./routes/itensRoutes'));

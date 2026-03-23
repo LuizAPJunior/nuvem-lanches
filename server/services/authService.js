@@ -1,5 +1,5 @@
 // src/services/authService.js
-const { supabase } = require('../supabase');
+const { supabase, supabaseAdmin, removeClientFromCache } = require('../supabase');
 
 exports.signUp = async ({ email, password, ...metadata }) => {
   const { data, error } = await supabase.auth.signUp({
@@ -21,7 +21,9 @@ exports.resendConfirmation = async (email) => {
   await supabase.auth.resend({ email, type: 'signup' });
 };
 
-exports.signOut = async (token) => {
-  const { error } = await supabase.auth.admin.signOut(token);
-  if (error) throw error;
-};
+
+
+
+
+
+

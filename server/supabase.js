@@ -11,20 +11,32 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // supabase cliente pra operações públicas 
 const supabase = supabaseJS.createClient(supabaseUrl, supabaseAnonKey);
 
-// supabase cliente com cache e autenticação JWT de usuários  
 const clientCache = new Map();
-const TOKEN_TTL_MS = 60 * 60 * 1000;  
 
+// supabase cliente com cache e autenticação JWT de usuários  
 const getSupabaseClient = (token) => {
   const cached = clientCache.get(token);
   if (cached && Date.now() < cached.expiresAt) return cached.client;
+
+  const { exp } = require('jsonwebtoken').decode(token);
+  const expiresAt = exp * 1000; 
 
   const client = supabaseJS.createClient(supabaseUrl, supabaseAnonKey, {
     global: { headers: { Authorization: `Bearer ${token}` } },
   });
 
-  clientCache.set(token, { client, expiresAt: Date.now() + TOKEN_TTL_MS });
+  clientCache.set(token, { client, expiresAt });
   return client;
 };
 
-module.exports = { supabase, getSupabaseClient };
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, { expiresAt }] of clientCache.entries()) {
+    if (now >= expiresAt) clientCache.delete(token);
+  }
+}, 5 * 60 * 1000); 
+
+
+const removeClientFromCache = (token) => clientCache.delete(token);
+
+module.exports = { supabase, getSupabaseClient, removeClientFromCache };
