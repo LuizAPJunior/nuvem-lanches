@@ -1,4 +1,5 @@
 exports.addItem = async (supabase, { userId, itemId, quantidade }) => {
+  // verifica se o item existe
   const { data: item, error: itemError } = await supabase
     .from('itens')
     .select('id')

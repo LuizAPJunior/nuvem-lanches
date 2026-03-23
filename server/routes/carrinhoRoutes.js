@@ -7,8 +7,7 @@ router.use(authenticateUser); // all carrinho routes require auth
 
 router.get('/', carrinhoController.getCart);
 router.post('/', carrinhoController.addItem);
-router.delete('/', carrinhoController.deleteAllItems);
 router.delete('/:id', carrinhoController.deleteItem);
-
+router.delete('/', carrinhoController.deleteAllItems);
 
 module.exports = router;
