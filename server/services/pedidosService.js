@@ -10,7 +10,6 @@ exports.addPedido = async (supabase, {userId, taxa_entrega, metodo_pagamento, ob
     .select();
 
     if (error) throw error;
-    console.log(data);
     return data;
 }
 

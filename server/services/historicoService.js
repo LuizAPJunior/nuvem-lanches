@@ -20,7 +20,5 @@ exports.getHistorico = async(supabase, userId) => {
     ...pedido,
     pedido_itens: itens.filter(item => item.pedido_id === pedido.id)
   }));
-  console.log(result);
-  
   return result;
 }

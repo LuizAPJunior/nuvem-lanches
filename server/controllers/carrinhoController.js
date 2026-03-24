@@ -7,9 +7,7 @@ exports.addItem = catchAsync(async (req, res) => {
     userId: req.user.id,
     itemId,
     quantidade,
-  });
-  console.log(data);
-  
+  });  
   res.status(201).json(data);
 });
 

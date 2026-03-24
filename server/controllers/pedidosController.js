@@ -9,7 +9,6 @@ exports.addPedido = async(req, res) => {
         quantia_dinheiro, 
         observacao
     });
-    console.log(data);
     res.status(200).json(data);  
 }
 

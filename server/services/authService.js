@@ -1,4 +1,3 @@
-// src/services/authService.js
 const { supabase } = require('../supabase');
 
 exports.signUp = async ({ email, password, ...metadata }) => {
