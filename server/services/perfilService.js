@@ -1,6 +1,6 @@
 exports.getProfile = async(supabase, userId) => {
   const {data, error} = await supabase
-  .from('profile_public')
+  .from('perfil')
   .select('*')
   .eq('id', userId)
   .select();

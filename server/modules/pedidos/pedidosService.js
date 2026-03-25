@@ -26,6 +26,5 @@ exports.getPedidosItens = async(supabase, userId, pedidoId) => {
     .select()
 
     if (error) throw error;
-
     return data;
 }

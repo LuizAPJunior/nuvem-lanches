@@ -11,12 +11,10 @@ app.use(morgan('combined'));
 
 app.use('/me/perfil', require('./routes/perfilRoutes'));
 app.use('/me/pedidos/historico', require('./routes/historicoRoutes'));
-app.use('/pedidos', require('./routes/pedidosRoutes'));
+app.use('/pedidos', require('./modules/pedidos/pedidosRoutes'));
 app.use('/carrinho', require('./modules/carrinho/carrinhoRoutes'));
 app.use('/itens', require('./modules/itens/itensRoute'));
 app.use('/', require('./routes/authRoutes'));
-
-console.log(process.env.ALLOWED_ORIGIN);
 
 
 // Global error handler
