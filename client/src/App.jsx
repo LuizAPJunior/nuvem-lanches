@@ -5,6 +5,7 @@ import Cadastro from "./pages/Cadastro";
 import Dashboard from "./pages/Dashboard";
 import ItensPage from "./pages/ItensPage";
 import Carrinho from "./pages/Carrinho";
+import NovoPedido from "./pages/NovoPedido";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -34,6 +35,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Carrinho />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/novo-pedido"
+          element={
+            <ProtectedRoute>
+              <NovoPedido />
             </ProtectedRoute>
           }
         />

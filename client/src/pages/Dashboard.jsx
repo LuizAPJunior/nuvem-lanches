@@ -24,6 +24,10 @@ function Dashboard() {
           <button type="button">Ver carrinho</button>
         </Link>
 
+        <Link to="/novo-pedido">
+          <button type="button">Finalizar pedido</button>
+        </Link>
+
         <button type="button" onClick={handleLogout}>
           Sair
         </button>
