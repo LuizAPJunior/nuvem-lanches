@@ -28,6 +28,14 @@ function Dashboard() {
           <button type="button">Finalizar pedido</button>
         </Link>
 
+        <Link to="/historico">
+          <button type="button">Histórico</button>
+        </Link>
+
+        <Link to="/perfil">
+          <button type="button">Perfil</button>
+        </Link>
+
         <button type="button" onClick={handleLogout}>
           Sair
         </button>

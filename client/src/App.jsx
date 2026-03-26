@@ -6,6 +6,8 @@ import Dashboard from "./pages/Dashboard";
 import ItensPage from "./pages/ItensPage";
 import Carrinho from "./pages/Carrinho";
 import NovoPedido from "./pages/NovoPedido";
+import Historico from "./pages/Historico";
+import Perfil from "./pages/Perfil";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -43,6 +45,22 @@ function App() {
           element={
             <ProtectedRoute>
               <NovoPedido />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/historico"
+          element={
+            <ProtectedRoute>
+              <Historico />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/perfil"
+          element={
+            <ProtectedRoute>
+              <Perfil />
             </ProtectedRoute>
           }
         />
