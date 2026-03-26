@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import Dashboard from "./pages/Dashboard";
+import ItensPage from "./pages/ItensPage";
+import Carrinho from "./pages/Carrinho";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -16,6 +18,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/itens"
+          element={
+            <ProtectedRoute>
+              <ItensPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/carrinho"
+          element={
+            <ProtectedRoute>
+              <Carrinho />
             </ProtectedRoute>
           }
         />
