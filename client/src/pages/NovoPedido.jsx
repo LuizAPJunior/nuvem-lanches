@@ -1,15 +1,20 @@
 import { useState } from "react";
 import { criarPedido } from "../services/pedidoService";
 import PageHeader from "../components/PageHeader";
+import FeedbackMessage from "../components/FeedbackMessage";
 
 function NovoPedido() {
   const [taxaEntrega, setTaxaEntrega] = useState("");
   const [metodoPagamento, setMetodoPagamento] = useState("pix");
   const [observacao, setObservacao] = useState("");
   const [quantiaDinheiro, setQuantiaDinheiro] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState({ type: "", message: "" });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setFeedback({ type: "", message: "" });
 
     const payload = {
       taxa_entrega: Number(taxaEntrega),
@@ -21,7 +26,7 @@ function NovoPedido() {
 
     try {
       await criarPedido(payload);
-      alert("Pedido criado com sucesso!");
+      setFeedback({ type: "success", message: "Pedido criado com sucesso!" });
       setTaxaEntrega("");
       setMetodoPagamento("pix");
       setObservacao("");
@@ -30,7 +35,9 @@ function NovoPedido() {
       console.error(error);
       const mensagem =
         error.response?.data?.error || "Erro ao criar pedido.";
-      alert(mensagem);
+      setFeedback({ type: "error", message: mensagem });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,11 +59,13 @@ function NovoPedido() {
               value={taxaEntrega}
               onChange={(e) => setTaxaEntrega(e.target.value)}
               required
+              disabled={loading}
             />
 
             <select
               value={metodoPagamento}
               onChange={(e) => setMetodoPagamento(e.target.value)}
+              disabled={loading}
             >
               <option value="pix">Pix</option>
               <option value="dinheiro">Dinheiro</option>
@@ -69,6 +78,7 @@ function NovoPedido() {
               value={observacao}
               onChange={(e) => setObservacao(e.target.value)}
               rows="4"
+              disabled={loading}
             />
 
             {metodoPagamento === "dinheiro" && (
@@ -79,15 +89,18 @@ function NovoPedido() {
                 value={quantiaDinheiro}
                 onChange={(e) => setQuantiaDinheiro(e.target.value)}
                 required
+                disabled={loading}
               />
             )}
 
             <div className="actions-row">
-              <button type="submit" className="btn-primary">
-                Criar pedido
+              <button type="submit" className="btn-primary" disabled={loading}>
+                {loading ? "Criando pedido..." : "Criar pedido"}
               </button>
             </div>
           </form>
+
+          <FeedbackMessage type={feedback.type} message={feedback.message} />
         </div>
       </div>
     </div>
