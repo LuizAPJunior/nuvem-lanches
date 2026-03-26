@@ -1,7 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
+import PageHeader from "../components/PageHeader";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -11,34 +13,55 @@ function Dashboard() {
   };
 
   return (
-    <div style={{ padding: "24px" }}>
-      <h2>Dashboard</h2>
-      <p>Usuário logado</p>
+    <div className="page-shell">
+      <div className="page-container">
+        <div className="page-card">
+          <PageHeader
+            title="Dashboard"
+            subtitle={`Bem-vindo${user?.email ? `, ${user.email}` : ""}`}
+            showBack={false}
+          />
 
-      <div style={{ display: "flex", gap: "12px", marginTop: "16px", flexWrap: "wrap" }}>
-        <Link to="/itens">
-          <button type="button">Ver itens</button>
-        </Link>
+          <p className="status-text">
+            Escolha uma das opções abaixo para navegar no sistema.
+          </p>
 
-        <Link to="/carrinho">
-          <button type="button">Ver carrinho</button>
-        </Link>
+          <div className="nav-grid">
+            <Link to="/itens">
+              <button type="button" className="btn-primary">
+                Ver itens
+              </button>
+            </Link>
 
-        <Link to="/novo-pedido">
-          <button type="button">Finalizar pedido</button>
-        </Link>
+            <Link to="/carrinho">
+              <button type="button" className="btn-secondary">
+                Ver carrinho
+              </button>
+            </Link>
 
-        <Link to="/historico">
-          <button type="button">Histórico</button>
-        </Link>
+            <Link to="/novo-pedido">
+              <button type="button" className="btn-success">
+                Finalizar pedido
+              </button>
+            </Link>
 
-        <Link to="/perfil">
-          <button type="button">Perfil</button>
-        </Link>
+            <Link to="/historico">
+              <button type="button" className="btn-secondary">
+                Histórico
+              </button>
+            </Link>
 
-        <button type="button" onClick={handleLogout}>
-          Sair
-        </button>
+            <Link to="/perfil">
+              <button type="button" className="btn-secondary">
+                Perfil
+              </button>
+            </Link>
+
+            <button type="button" className="btn-danger" onClick={handleLogout}>
+              Sair
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
