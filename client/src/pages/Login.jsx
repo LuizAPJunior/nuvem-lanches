@@ -27,30 +27,41 @@ function Login() {
   };
 
   return (
-    <div style={{ padding: "24px" }}>
-      <h2>Login</h2>
+    <div className="page-shell">
+      <div className="page-container">
+        <div className="page-card" style={{ maxWidth: "480px" }}>
+          <h1 className="page-title">Login</h1>
+          <p className="page-subtitle">Acesse sua conta para continuar</p>
 
-      <form onSubmit={handleLogin} style={{ display: "grid", gap: "12px", maxWidth: "320px" }}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <form onSubmit={handleLogin} className="form-grid" style={{ marginTop: "24px" }}>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+            <input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-        <button type="submit">Entrar</button>
-      </form>
+            <div className="actions-row">
+              <button type="submit" className="btn-primary">
+                Entrar
+              </button>
 
-      <p style={{ marginTop: "16px" }}>
-        Não tem conta? <Link to="/cadastro">Ir para cadastro</Link>
-      </p>
+              <Link to="/cadastro">
+                <button type="button" className="btn-secondary">
+                  Ir para cadastro
+                </button>
+              </Link>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

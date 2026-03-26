@@ -40,7 +40,7 @@ function Dashboard() {
             </Link>
 
             <Link to="/novo-pedido">
-              <button type="button" className="btn-success">
+              <button type="button" className="btn-secondary">
                 Finalizar pedido
               </button>
             </Link>
@@ -57,7 +57,7 @@ function Dashboard() {
               </button>
             </Link>
 
-            <button type="button" className="btn-danger" onClick={handleLogout}>
+            <button type="button" className="btn-secondary" onClick={handleLogout}>
               Sair
             </button>
           </div>

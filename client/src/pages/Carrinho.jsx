@@ -5,6 +5,7 @@ import {
   deleteItemCarrinho,
   limparCarrinho,
 } from "../services/carrinhoService";
+import PageHeader from "../components/PageHeader";
 
 function Carrinho() {
   const [itens, setItens] = useState([]);
@@ -45,7 +46,7 @@ function Carrinho() {
       await carregarCarrinho();
     } catch (error) {
       console.error(error);
-      alert("Erro ao remover item do carrinho.");
+      alert("Erro ao remover item.");
     }
   };
 
@@ -60,67 +61,75 @@ function Carrinho() {
   };
 
   return (
-    <div style={{ padding: "24px" }}>
-      <h2>Carrinho</h2>
+    <div className="page-shell">
+      <div className="page-container">
+        <div className="page-card">
+          <PageHeader
+            title="Carrinho"
+            subtitle="Confira os itens adicionados antes de finalizar o pedido"
+            showBack={true}
+          />
 
-      {loading && <p>Carregando carrinho...</p>}
-      {erro && <p>{erro}</p>}
+          {loading && <p className="status-text">Carregando carrinho...</p>}
+          {erro && <div className="empty-state"><p>{erro}</p></div>}
 
-      {!loading && !erro && itens.length === 0 && <p>Carrinho vazio.</p>}
-
-      {!loading &&
-        !erro &&
-        itens.length > 0 &&
-        itens.map((item, index) => (
-          <div
-            key={item.id ?? index}
-            style={{
-              background: "#fff",
-              padding: "16px",
-              borderRadius: "8px",
-              marginBottom: "12px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-            }}
-          >
-            <p>
-              <strong>Item:</strong> {item.nome || item.item?.nome || "Sem nome"}
-            </p>
-
-            <p>
-              <strong>Quantidade:</strong>{" "}
-              {item.quantidade || item.quantity || 1}
-            </p>
-
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-              <button
-                type="button"
-                onClick={() => handleUpdate(item.id, "adicionar")}
-              >
-                +
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleUpdate(item.id, "subtrair")}
-              >
-                -
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleDelete(item.id)}
-              >
-                Remover
-              </button>
+          {!loading && !erro && itens.length === 0 && (
+            <div className="empty-state">
+              <p>Carrinho vazio.</p>
             </div>
-          </div>
-        ))}
+          )}
 
-      {!loading && !erro && itens.length > 0 && (
-        <button type="button" onClick={handleLimpar}>
-          Limpar carrinho
-        </button>
-      )}
+          {!loading && !erro && itens.length > 0 && (
+            <>
+              <div className="list-stack">
+                {itens.map((item, index) => (
+                  <div className="simple-card" key={item.id ?? index}>
+                    <p className="info-row">
+                      <strong>Item:</strong> {item.nome || item.item?.nome || "Sem nome"}
+                    </p>
+
+                    <p className="info-row">
+                      <strong>Quantidade:</strong> {item.quantidade || item.quantity || 1}
+                    </p>
+
+                    <div className="actions-row">
+                      <button
+                        type="button"
+                        className="btn-primary"
+                        onClick={() => handleUpdate(item.id, "adicionar")}
+                      >
+                        +
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn-secondary"
+                        onClick={() => handleUpdate(item.id, "subtrair")}
+                      >
+                        -
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn-secondary"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        Remover
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="actions-row" style={{ marginTop: "20px" }}>
+                <button type="button" className="btn-secondary" onClick={handleLimpar}>
+                  Limpar carrinho
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

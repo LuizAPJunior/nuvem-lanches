@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import PageHeader from "../components/PageHeader";
 
 function Historico() {
   const [pedidos, setPedidos] = useState([]);
@@ -25,37 +26,39 @@ function Historico() {
   }, []);
 
   return (
-    <div style={{ padding: "24px" }}>
-      <h2>Histórico de Pedidos</h2>
+    <div className="page-shell">
+      <div className="page-container">
+        <div className="page-card">
+          <PageHeader
+            title="Histórico"
+            subtitle="Veja os pedidos já realizados no sistema"
+            showBack={true}
+          />
 
-      {loading && <p>Carregando histórico...</p>}
-      {erro && <p>{erro}</p>}
+          {loading && <p className="status-text">Carregando histórico...</p>}
+          {erro && <div className="empty-state"><p>{erro}</p></div>}
 
-      {!loading && !erro && pedidos.length === 0 && (
-        <p>Nenhum pedido encontrado.</p>
-      )}
+          {!loading && !erro && pedidos.length === 0 && (
+            <div className="empty-state">
+              <p>Nenhum pedido encontrado.</p>
+            </div>
+          )}
 
-      {!loading &&
-        !erro &&
-        pedidos.length > 0 &&
-        pedidos.map((pedido, index) => (
-          <div
-            key={pedido.id ?? index}
-            style={{
-              background: "#fff",
-              padding: "16px",
-              borderRadius: "8px",
-              marginBottom: "12px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-            }}
-          >
-            <p><strong>ID:</strong> {pedido.id ?? "Sem ID"}</p>
-            <p><strong>Status:</strong> {pedido.status ?? "Sem status"}</p>
-            <p><strong>Método de pagamento:</strong> {pedido.metodo_pagamento ?? "Não informado"}</p>
-            <p><strong>Taxa de entrega:</strong> {pedido.taxa_entrega ?? "Não informada"}</p>
-            <p><strong>Observação:</strong> {pedido.observacao ?? "Sem observação"}</p>
-          </div>
-        ))}
+          {!loading && !erro && pedidos.length > 0 && (
+            <div className="list-stack">
+              {pedidos.map((pedido, index) => (
+                <div className="simple-card" key={pedido.id ?? index}>
+                  <p className="info-row"><strong>ID:</strong> {pedido.id ?? "Sem ID"}</p>
+                  <p className="info-row"><strong>Status:</strong> {pedido.status ?? "Sem status"}</p>
+                  <p className="info-row"><strong>Método de pagamento:</strong> {pedido.metodo_pagamento ?? "Não informado"}</p>
+                  <p className="info-row"><strong>Taxa de entrega:</strong> {pedido.taxa_entrega ?? "Não informada"}</p>
+                  <p className="info-row"><strong>Observação:</strong> {pedido.observacao ?? "Sem observação"}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

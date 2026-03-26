@@ -1,12 +1,45 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import api from "../api/axios";
 import { addItemCarrinho } from "../services/carrinhoService";
-import "./ItensPage.css";
+import PageHeader from "../components/PageHeader";
 
-export default function ItensPage() {
+function ItensPage() {
   const [itens, setItens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const itensExtras = [
+    {
+      id: "demo-feijoada",
+      nome: "Feijoada Completa",
+      preco: 32.9,
+      categoria: "Comida brasileira",
+      descricao: "Prato ilustrativo com arroz, farofa e couve.",
+      disponibilidade: true,
+      imagem_url: "https://placehold.co/600x400/13151a/b5f542?text=Feijoada",
+      isDemo: true,
+    },
+    {
+      id: "demo-moqueca",
+      nome: "Moqueca Baiana",
+      preco: 36.5,
+      categoria: "Comida brasileira",
+      descricao: "Prato ilustrativo com peixe, arroz e pirão.",
+      disponibilidade: true,
+      imagem_url: "https://placehold.co/600x400/13151a/b5f542?text=Moqueca",
+      isDemo: true,
+    },
+    {
+      id: "demo-baiao",
+      nome: "Baião de Dois",
+      preco: 27.9,
+      categoria: "Comida brasileira",
+      descricao: "Prato ilustrativo típico nordestino com queijo coalho.",
+      disponibilidade: true,
+      imagem_url: "https://placehold.co/600x400/13151a/b5f542?text=Baiao+de+Dois",
+      isDemo: true,
+    },
+  ];
 
   useEffect(() => {
     const fetchItens = async () => {
@@ -14,10 +47,12 @@ export default function ItensPage() {
         setLoading(true);
         setError(null);
         const { data } = await api.get("/itens");
-        setItens(data);
+        setItens(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err);
-        setError(err.response?.data?.error || err.message || "Failed to fetch items.");
+        setError(
+          err.response?.data?.error || err.message || "Erro ao buscar itens."
+        );
       } finally {
         setLoading(false);
       }
@@ -26,9 +61,18 @@ export default function ItensPage() {
     fetchItens();
   }, []);
 
-  const handleAddCarrinho = async (itemId) => {
+  const listaFinal = useMemo(() => {
+    return [...itens, ...itensExtras];
+  }, [itens]);
+
+  const handleAddCarrinho = async (item) => {
+    if (item.isDemo) {
+      alert("Esse item é ilustrativo no front e ainda não existe no banco.");
+      return;
+    }
+
     try {
-      await addItemCarrinho(itemId);
+      await addItemCarrinho(item.id);
       alert("Item adicionado ao carrinho!");
     } catch (error) {
       console.error(error);
@@ -37,106 +81,88 @@ export default function ItensPage() {
   };
 
   return (
-    <div className="page">
-      <header className="header">
-        <div className="header-inner">
-          <span className="header-tag">Cardápio</span>
-          <h1 className="header-title">Itens</h1>
-          <p className="header-sub">dados vindos da API /itens</p>
-        </div>
-        <div className="header-line" />
-      </header>
+    <div className="page-shell">
+      <div className="page-container">
+        <div className="page-card" style={{ maxWidth: "1100px" }}>
+          <PageHeader
+            title="Itens"
+            subtitle="Veja os produtos disponíveis no sistema"
+            showBack={true}
+          />
 
-      <main className="main">
-        {loading && (
-          <div className="state-box loading-box">
-            <div className="spinner" />
-            <p>Carregando itens...</p>
-          </div>
-        )}
+          {loading && <p className="status-text">Carregando itens...</p>}
 
-        {error && (
-          <div className="state-box error-box">
-            <span className="error-icon">✕</span>
-            <p className="error-title">Erro na requisição</p>
-            <p className="error-msg">{error}</p>
-            <button
-              className="retry-btn"
-              onClick={() => window.location.reload()}
-            >
-              Tentar novamente
-            </button>
-          </div>
-        )}
+          {error && (
+            <div className="empty-state">
+              <p>{error}</p>
+            </div>
+          )}
 
-        {!loading && !error && itens.length === 0 && (
-          <div className="state-box empty-box">
-            <span className="empty-icon">∅</span>
-            <p>Nenhum item encontrado.</p>
-          </div>
-        )}
+          {!loading && !error && listaFinal.length === 0 && (
+            <div className="empty-state">
+              <p>Nenhum item encontrado.</p>
+            </div>
+          )}
 
-        {!loading && !error && itens.length > 0 && (
-          <>
-            <p className="result-count">{itens.length} item(ns) retornado(s)</p>
-            <ul className="grid">
-              {itens.map((item, idx) => (
-                <li key={item.id ?? idx} className="card">
-                  <div className="card-index">#{idx + 1}</div>
-
-                  <div className="card-body">
-                    <div className="card-row">
-                      <span className="card-key">Nome</span>
-                      <span className="card-val">{item.nome || "Sem nome"}</span>
+          {!loading && !error && listaFinal.length > 0 && (
+            <div className="grid-cards">
+              {listaFinal.map((item, index) => (
+                <div className="info-card" key={item.id ?? index}>
+                  {item.imagem_url ? (
+                    <img
+                      src={item.imagem_url}
+                      alt={item.nome}
+                      className="product-image"
+                    />
+                  ) : (
+                    <div className="product-image-fallback">
+                      {item.nome ? item.nome.charAt(0).toUpperCase() : "I"}
                     </div>
+                  )}
 
-                    <div className="card-row">
-                      <span className="card-key">Preço</span>
-                      <span className="card-val">
-                        R$ {item.preco ? Number(item.preco).toFixed(2) : "0,00"}
-                      </span>
-                    </div>
+                  <div className="info-card-body">
+                    {item.isDemo && <span className="badge-demo">Item ilustrativo</span>}
 
-                    <div className="card-row">
-                      <span className="card-key">Categoria</span>
-                      <span className="card-val">{item.categoria || "Sem categoria"}</span>
-                    </div>
+                    <h3>{item.nome || "Sem nome"}</h3>
 
-                    <div className="card-row">
-                      <span className="card-key">Descrição</span>
-                      <span className="card-val">{item.descricao || "Sem descrição"}</span>
-                    </div>
+                    <p className="info-row">
+                      <strong>Preço:</strong>{" "}
+                      R$ {item.preco ? Number(item.preco).toFixed(2) : "0,00"}
+                    </p>
 
-                    <div className="card-row">
-                      <span className="card-key">Disponível</span>
-                      <span className="card-val">
-                        {item.disponibilidade ? "Sim" : "Não"}
-                      </span>
-                    </div>
+                    <p className="info-row">
+                      <strong>Categoria:</strong>{" "}
+                      {item.categoria || "Sem categoria"}
+                    </p>
 
-                    <div className="card-row">
-                      <span className="card-key">Imagem</span>
-                      <span className="card-val">
-                        {item.imagem_url ? "Disponível" : "Sem imagem"}
-                      </span>
-                    </div>
+                    <p className="info-row">
+                      <strong>Descrição:</strong>{" "}
+                      {item.descricao || "Sem descrição"}
+                    </p>
 
-                    <div style={{ marginTop: "12px" }}>
+                    <p className="info-row">
+                      <strong>Disponibilidade:</strong>{" "}
+                      {item.disponibilidade ? "Disponível" : "Indisponível"}
+                    </p>
+
+                    <div className="actions-row">
                       <button
-                        className="retry-btn"
                         type="button"
-                        onClick={() => handleAddCarrinho(item.id)}
+                        className={item.isDemo ? "btn-secondary" : "btn-primary"}
+                        onClick={() => handleAddCarrinho(item)}
                       >
-                        Adicionar ao carrinho
+                        {item.isDemo ? "Item ilustrativo" : "Adicionar ao carrinho"}
                       </button>
                     </div>
                   </div>
-                </li>
+                </div>
               ))}
-            </ul>
-          </>
-        )}
-      </main>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
+
+export default ItensPage;

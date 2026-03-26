@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import PageHeader from "../components/PageHeader";
 
 function Perfil() {
   const [perfil, setPerfil] = useState({});
@@ -74,58 +75,80 @@ function Perfil() {
   };
 
   if (loading) {
-    return <div style={{ padding: "24px" }}>Carregando perfil...</div>;
+    return (
+      <div className="page-shell">
+        <div className="page-container">
+          <div className="page-card">
+            <p className="status-text">Carregando perfil...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (erro) {
-    return <div style={{ padding: "24px" }}>{erro}</div>;
+    return (
+      <div className="page-shell">
+        <div className="page-container">
+          <div className="page-card">
+            <div className="empty-state">
+              <p>{erro}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div style={{ padding: "24px" }}>
-      <h2>Perfil</h2>
+    <div className="page-shell">
+      <div className="page-container">
+        <div className="page-card">
+          <PageHeader
+            title="Perfil"
+            subtitle="Atualize seus dados pessoais"
+            showBack={true}
+          />
 
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "grid",
-          gap: "12px",
-          maxWidth: "400px",
-          marginTop: "16px",
-        }}
-      >
-        <input
-          type="text"
-          name="nome"
-          placeholder="Nome"
-          value={formData.nome}
-          onChange={handleChange}
-        />
+          <form onSubmit={handleSubmit} className="form-grid">
+            <input
+              type="text"
+              name="nome"
+              placeholder="Nome"
+              value={formData.nome}
+              onChange={handleChange}
+            />
 
-        <input
-          type="text"
-          name="telefone"
-          placeholder="Telefone"
-          value={formData.telefone}
-          onChange={handleChange}
-        />
+            <input
+              type="text"
+              name="telefone"
+              placeholder="Telefone"
+              value={formData.telefone}
+              onChange={handleChange}
+            />
 
-        <input
-          type="text"
-          name="endereco"
-          placeholder="Endereço"
-          value={formData.endereco}
-          onChange={handleChange}
-        />
+            <input
+              type="text"
+              name="endereco"
+              placeholder="Endereço"
+              value={formData.endereco}
+              onChange={handleChange}
+            />
 
-        <button type="submit">Salvar perfil</button>
-      </form>
+            <div className="actions-row">
+              <button type="submit" className="btn-primary">
+                Salvar perfil
+              </button>
+            </div>
+          </form>
 
-      <div style={{ marginTop: "24px" }}>
-        <h3>Dados atuais</h3>
-        <p><strong>Nome:</strong> {perfil.nome || "Não informado"}</p>
-        <p><strong>Telefone:</strong> {perfil.telefone || "Não informado"}</p>
-        <p><strong>Endereço:</strong> {perfil.endereco || "Não informado"}</p>
+          <div style={{ marginTop: "28px" }}>
+            <h3 style={{ marginBottom: "12px" }}>Dados atuais</h3>
+            <p className="info-row"><strong>Nome:</strong> {perfil.nome || "Não informado"}</p>
+            <p className="info-row"><strong>Telefone:</strong> {perfil.telefone || "Não informado"}</p>
+            <p className="info-row"><strong>Endereço:</strong> {perfil.endereco || "Não informado"}</p>
+          </div>
+        </div>
       </div>
     </div>
   );
