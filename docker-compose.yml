@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # Back-end (Node + Supabase)
+  server:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: nuvem-lanches-api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/app
+      - /app/node_modules # Não deixa o Docker sobrescrever os módulos internos
+    environment:
+      - NODE_ENV=development
+      # Se tiver um arquivo .env, o Docker vai ler as chaves do Supabase aqui:
+    env_file:
+      - ./server/.env 
+
+  # Front-end (React/Vite)
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: nuvem-lanches-front
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    depends_on:
+      - server
