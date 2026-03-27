@@ -28,10 +28,18 @@ npm install
 
 ```
 
-executar o backend da aplicação:
+criar um arquivo .env na pasta server e preencher as chaves do supabase
+
+```
+SUPABASE_URL="url do seu projeto supabase aqui"
+SUPABASE_ANON_KEY="chave anônima disponibilizada no projeto do supabase aqui"
+ALLOWED_ORIGIN="local de origem do seu projeto frontend aqui(ex: http://localhost:5178)"
+
+```
+executar o backend da aplicação(para desenvolvimento):
 
 ``` 
-node index.js
+npm run dev
 
 ```
 
@@ -42,8 +50,17 @@ cd client/
 npm install
 
 ```
+criar um arquivo .env na pasta client e preencher as chaves do supabase e da url da base da API:
 
-executar o frontend da aplicação:
+
+```
+VITE_SUPABASE_URL="url do projeto do supabase"
+VITE_SUPABASE_ANON_KEY="chave anônima do projeto do supabase"
+VITE_API_URL="url base da api aqui"
+
+```
+
+executar o frontend da aplicação(para o desenvolvimento):
 
 ``` 
 npm run dev
