@@ -1,9 +1,10 @@
-const authService = require('../services/authService');
-const catchAsync = require('../utils/catchAsync');
+const authService = require('./authService');
+const catchAsync = require('../../utils/catchAsync');
 
+// req.body is already validated and stripped by the validate middleware.
 exports.cadastrar = catchAsync(async (req, res) => {
   const data = await authService.signUp(req.body);
-  res.json(data);
+  res.status(201).json(data);
 });
 
 exports.login = catchAsync(async (req, res) => {
@@ -14,7 +15,7 @@ exports.login = catchAsync(async (req, res) => {
     if (error.code === 'email_not_confirmed') {
       await authService.resendConfirmation(req.body.email);
       return res.status(401).json({
-        error: 'Email não confirmado, um novo email de confirmação foi enviado.',
+        error: 'Email não confirmado. Um novo email de confirmação foi enviado.',
       });
     }
     return res.status(401).json({ error: error.message });
@@ -28,5 +29,3 @@ exports.login = catchAsync(async (req, res) => {
     user: session.user,
   });
 });
-
-

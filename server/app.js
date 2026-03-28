@@ -9,12 +9,12 @@ app.use(helmet());
 app.use(cors({ origin: process.env.ALLOWED_ORIGIN }));
 app.use(morgan('combined'));
 
-app.use('/me/perfil', require('./routes/perfilRoutes'));
-app.use('/me/pedidos/historico', require('./routes/historicoRoutes'));
+app.use('/me/perfil', require('./modules/perfil/perfilRoutes'));
+app.use('/me/pedidos/historico', require('./modules/historico/historicoRoutes'));
 app.use('/pedidos', require('./modules/pedidos/pedidosRoutes'));
 app.use('/carrinho', require('./modules/carrinho/carrinhoRoutes'));
 app.use('/itens', require('./modules/itens/itensRoute'));
-app.use('/', require('./routes/authRoutes'));
+app.use('/', require('./modules/auth/authRoutes'));
 
 
 // Global error handler
