@@ -17,17 +17,3 @@ services:
       # Se tiver um arquivo .env, o Docker vai ler as chaves do Supabase aqui:
     env_file:
       - ./server/.env 
-
-  # Front-end (React/Vite)
-  client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    container_name: nuvem-lanches-front
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    depends_on:
-      - server

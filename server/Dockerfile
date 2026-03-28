@@ -1,18 +1,28 @@
-# Usar a versão do Node recomendada no README (ou uma versão LTS recente)
-FROM node:24-alpine
+# Build 
+FROM node:20-alpine AS builder
 
-# Diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copiar arquivos de dependências e instalar
 COPY package*.json ./
-RUN npm install
+RUN npm ci --only=production
 
-# Copiar o restante do código fonte
+# Produção
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+# Criando usuário comum(não é o superusuário)
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Copia os módulos node que foram instalados e copia o código fonte do app 
+COPY --from=builder /app/node_modules ./node_modules
 COPY . .
 
-# Expor a porta que a aplicação usa (padrão 3000 no index.js)
+# transfere a posse dos arqquivos para o usuário comum
+RUN chown -R appuser:appgroup /app
+USER appuser
+
+# expõe a porta 3000(só para documentação)
 EXPOSE 3000
 
-# Comando para iniciar a aplicação
 CMD ["node", "app.js"]
