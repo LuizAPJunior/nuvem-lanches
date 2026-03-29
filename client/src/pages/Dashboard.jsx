@@ -1,14 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
+import { logout } from "../services/authService";
 
 function Dashboard() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user");
+  const handleLogout = async() => {
+    await logout();
     navigate("/");
   };
 

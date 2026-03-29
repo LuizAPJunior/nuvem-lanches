@@ -21,7 +21,16 @@ exports.login = catchAsync(async (req, res) => {
     return res.status(401).json({ error: error.message });
   }
 
-  const { session } = data;
+ const { session } = data; 
+ const token = session.access_token;
+
+ res.cookie('token', token, {
+    httpOnly: true,               
+    secure: process.env.NODE_ENV === 'production',  
+    sameSite: 'lax',              // CSRF protection
+    maxAge: 60 * 60 * 1000,       
+  })
+
   res.json({
     message: 'Logado!',
     access_token: session.access_token,
@@ -29,3 +38,8 @@ exports.login = catchAsync(async (req, res) => {
     user: session.user,
   });
 });
+
+exports.logout = async(req, res) => {
+  res.clearCookie('token', { httpOnly: true, sameSite: 'lax' })
+  return res.json({ ok: true })
+}

@@ -1,12 +1,24 @@
+import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { supabase } from "../lib/supabaseClient";
 
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem("token");
+  const [session, setSession] = useState(undefined); 
 
-  if (!token) {
-    return <Navigate to="/" />;
-  }
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+    });
 
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (session === undefined) return null; 
+  if (!session) return <Navigate to="/" replace />;
   return children;
 }
 

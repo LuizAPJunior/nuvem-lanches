@@ -1,16 +1,19 @@
 import axios from "axios";
+import { supabase } from "../lib/supabaseClient";
 
-console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+
+api.interceptors.request.use(async (config) => {
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -18,5 +21,18 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      await supabase.auth.signOut();
+      window.location.href = "/login";
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default api;

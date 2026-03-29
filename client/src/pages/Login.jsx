@@ -1,38 +1,34 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { login } from "../services/authService";
+import { login, validateLoginInputs } from "../services/authService";
 import FeedbackMessage from "../components/FeedbackMessage";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [errors, setErrors]     = useState({});   // per-field validation
+  const [loading, setLoading]   = useState(false);
   const [feedback, setFeedback] = useState({ type: "", message: "" });
 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setFeedback({ type: "", message: "" });
+    const validationErrors = validateLoginInputs(email, password);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({});
 
+    setLoading(true);
     try {
-      const data = await login(email, password);
-
-      localStorage.setItem("token", data.access_token);
-      localStorage.setItem("refresh_token", data.refresh_token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
+      await login(email, password);
       setFeedback({ type: "success", message: "Login realizado com sucesso!" });
-
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 700);
+      setTimeout(() => navigate("/dashboard"), 700);
     } catch (error) {
-      const mensagem =
-        error.response?.data?.error || "Erro ao fazer login";
-      setFeedback({ type: "error", message: mensagem });
-      console.error(error);
+      setFeedback({ type: "error", message: error.message });
     } finally {
       setLoading(false);
     }
@@ -46,21 +42,33 @@ function Login() {
           <p className="page-subtitle">Acesse sua conta para continuar</p>
 
           <form onSubmit={handleLogin} className="form-grid" style={{ marginTop: "24px" }}>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
-            />
+            <div className="field-group">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+                aria-invalid={!!errors.email}
+              />
+              {errors.email && (
+                <span className="field-error">{errors.email}</span>
+              )}
+            </div>
 
-            <input
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}
-            />
+            <div className="field-group">
+              <input
+                type="password"
+                placeholder="Senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+                aria-invalid={!!errors.password}
+              />
+              {errors.password && (
+                <span className="field-error">{errors.password}</span>
+              )}
+            </div>
 
             <div className="actions-row">
               <button type="submit" className="btn-primary" disabled={loading}>

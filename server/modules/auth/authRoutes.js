@@ -8,5 +8,6 @@ const { cadastrarSchema, loginSchema } = require('./auth.schema');
 
 router.post('/cadastrar', validate(cadastrarSchema), authController.cadastrar);
 router.post('/login', loginLimiter, validate(loginSchema), authController.login);
+router.post('/logout', authController.logout);
 
 module.exports = router;
