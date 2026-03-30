@@ -28,5 +28,4 @@ app.use((err, req, res, next) => {
   res.status(status).json({ error: message });
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server executando na porta ${port}`));
+module.exports = app;

@@ -5,16 +5,21 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
-  plugins: [react()],
-  define: {
-    __APP_API_URL__: JSON.stringify(env.VITE_API_URL),
-  },
-  server: {
-    proxy: {
-      // Forward /auth and /api to Express so cookies work on same origin
-      '/auth': { target: env.VITE_API_URL, changeOrigin: true },
-      '/api':  { target: env.VITE_API_URL, changeOrigin: true },
+    plugins: [react()],
+    define: {
+      __APP_API_URL__: JSON.stringify(env.VITE_API_URL),
     },
-   },
-  }
+    server: {
+      proxy: {
+        // Forward /auth and /api to Express so cookies work on same origin
+        '/auth': { target: env.VITE_API_URL, changeOrigin: true },
+        '/api':  { target: env.VITE_API_URL, changeOrigin: true },
+      },
+    },
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: './src/setupTests.js',
+    }
+    }
 })

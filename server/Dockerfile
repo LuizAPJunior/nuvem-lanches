@@ -25,4 +25,4 @@ USER appuser
 # expõe a porta 3000(só para documentação)
 EXPOSE 3000
 
-CMD ["node", "app.js"]
+CMD ["node", "server.js"]
