@@ -12,12 +12,17 @@ exports.login = catchAsync(async (req, res) => {
   try {
     data = await authService.signIn(req.body);
   } catch (error) {
-    if (error.code === 'email_not_confirmed') {
+    
+    
+    if (error.code == 'email_not_confirmed') {
+      console.log('PLEASE: ',error);
       await authService.resendConfirmation(req.body.email);
       return res.status(401).json({
         error: 'Email não confirmado. Um novo email de confirmação foi enviado.',
       });
     }
+    console.log('ERROR AQUI: ', error);
+    
     return res.status(401).json({ error: error.message });
   }
 

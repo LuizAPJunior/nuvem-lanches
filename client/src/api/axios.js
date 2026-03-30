@@ -26,9 +26,15 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    const originalRequest = error.config;
+
+    const isAuthRequest =
+      originalRequest.url.includes('/auth/login') ||
+      originalRequest.url.includes('/auth/cadastrar') ||
+      originalRequest.url.includes('/auth/');
+ 
+    if (error.response?.status === 401 && !isAuthRequest) {
       await supabase.auth.signOut();
-      window.location.href = "/login";
     }
 
     return Promise.reject(error);

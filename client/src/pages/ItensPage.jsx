@@ -2,44 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import api from "../api/axios";
 import { addItemCarrinho } from "../services/carrinhoService";
 import PageHeader from "../components/PageHeader";
+import CarrinhoButton from "../components/CarrinhoButton";
+import { CartToastContainer } from "../components/CartToast";
+import { useCartToast } from "../hooks/userCartToast";
 
 function ItensPage() {
   const [itens, setItens] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const itensExtras = [
-    {
-      id: "demo-feijoada",
-      nome: "Feijoada Completa",
-      preco: 32.9,
-      categoria: "Comida brasileira",
-      descricao: "Prato ilustrativo com arroz, farofa e couve.",
-      disponibilidade: true,
-      imagem_url: "https://placehold.co/600x400/13151a/b5f542?text=Feijoada",
-      isDemo: true,
-    },
-    {
-      id: "demo-moqueca",
-      nome: "Moqueca Baiana",
-      preco: 36.5,
-      categoria: "Comida brasileira",
-      descricao: "Prato ilustrativo com peixe, arroz e pirão.",
-      disponibilidade: true,
-      imagem_url: "https://placehold.co/600x400/13151a/b5f542?text=Moqueca",
-      isDemo: true,
-    },
-    {
-      id: "demo-baiao",
-      nome: "Baião de Dois",
-      preco: 27.9,
-      categoria: "Comida brasileira",
-      descricao: "Prato ilustrativo típico nordestino com queijo coalho.",
-      disponibilidade: true,
-      imagem_url: "https://placehold.co/600x400/13151a/b5f542?text=Baiao+de+Dois",
-      isDemo: true,
-    },
-  ];
+  // Incrementing this tells CarrinhoButton to re-fetch the cart count
+  const [cartRefreshTrigger, setCartRefreshTrigger] = useState(0);
+  const { toasts, addToast, dismissToast } = useCartToast();
 
   useEffect(() => {
     const fetchItens = async () => {
@@ -62,21 +35,22 @@ function ItensPage() {
   }, []);
 
   const listaFinal = useMemo(() => {
-    return [...itens, ...itensExtras];
+    return [...itens];
   }, [itens]);
 
   const handleAddCarrinho = async (item) => {
     if (item.isDemo) {
-      alert("Esse item é ilustrativo no front e ainda não existe no banco.");
       return;
     }
 
     try {
       await addItemCarrinho(item.id);
-      alert("Item adicionado ao carrinho!");
+      // Signal CarrinhoButton to re-fetch the updated count
+      setCartRefreshTrigger((prev) => prev + 1);
+      addToast(`${item.nome} foi adicionado ao carrinho`);
+
     } catch (error) {
       console.error(error);
-      alert("Erro ao adicionar item ao carrinho.");
     }
   };
 
@@ -84,11 +58,15 @@ function ItensPage() {
     <div className="page-shell">
       <div className="page-container">
         <div className="page-card" style={{ maxWidth: "1100px" }}>
-          <PageHeader
-            title="Itens"
-            subtitle="Veja os produtos disponíveis no sistema"
-            showBack={true}
-          />
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+            <PageHeader
+              title="Itens"
+              subtitle="Veja os produtos disponíveis no sistema"
+              showBack={false}
+            />
+            {/* Cart button — always visible, top-right of the page header area */}
+            <CarrinhoButton refreshTrigger={cartRefreshTrigger} />
+          </div>
 
           {loading && <p className="status-text">Carregando itens...</p>}
 
@@ -161,7 +139,9 @@ function ItensPage() {
           )}
         </div>
       </div>
+     <CartToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
+    
   );
 }
 

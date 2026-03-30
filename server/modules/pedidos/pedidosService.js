@@ -16,14 +16,17 @@ exports.addPedido = async (supabase, {userId, taxa_entrega, metodo_pagamento, ob
 
 exports.getPedidosItens = async(supabase, userId, pedidoId) => {
     const { data, error } = await supabase
-    .from('pedidos')
-    .select(`
-        *,
-        pedido_items (*)
-    `)
-    .eq('id', pedidoId)
-    .eq('perfil_id', userId)  
-    .select()
+        .from('pedidos')
+        .select(`
+            *,
+            pedido_itens (
+                *,
+                itens (*)
+            )
+        `)
+        .eq('id', pedidoId)
+        .eq('perfil_id', userId)
+        .single()
 
     if (error) throw error;
     return data;

@@ -18,8 +18,9 @@ exports.addItemSchema = z.object({
 
 // PATCH /:id — update quantity
 exports.updateQuantitySchema = z.object({
-  action: z.enum(['adicionar', 'subtrair'], {
-    required_error: 'action é obrigatório',
-    message: "action deve ser 'adicionar' ou 'subtrair'",
-  }),
+  quantidade: z.number({
+    required_error: 'quantidade é obrigatório',
+    invalid_type_error: 'quantidade deve ser um número inteiro',
+  }).int('quantidade deve ser um número inteiro')
+    .positive('quantidade deve ser positivo'),
 });

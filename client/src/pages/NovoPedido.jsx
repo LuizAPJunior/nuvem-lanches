@@ -69,8 +69,7 @@ function NovoPedido() {
             >
               <option value="pix">Pix</option>
               <option value="dinheiro">Dinheiro</option>
-              <option value="cartao_credito">Cartão de crédito</option>
-              <option value="cartao_debito">Cartão de débito</option>
+              <option value="cartao_credito">Cartão</option>
             </select>
 
             <textarea
@@ -99,7 +98,6 @@ function NovoPedido() {
               </button>
             </div>
           </form>
-
           <FeedbackMessage type={feedback.type} message={feedback.message} />
         </div>
       </div>

@@ -1,0 +1,43 @@
+/* ── CarrinhoButton ─────────────────────────────────────────────────────────── */
+.carrinho-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;          /* pill shape */
+  border: none;
+  background: #E8360A;           /* swap for your brand color variable */
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.carrinho-btn:hover  { opacity: 0.88; }
+.carrinho-btn:active { transform: scale(0.97); }
+
+.carrinho-btn__icon  { font-size: 16px; }
+.carrinho-btn__label { opacity: 1; }
+
+/* red badge in the top-right corner of the button */
+.carrinho-btn__badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #fff;
+  color: #E8360A;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #E8360A;
+  line-height: 1;
+}

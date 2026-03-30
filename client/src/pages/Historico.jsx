@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import PageHeader from "../components/PageHeader";
 
@@ -6,6 +7,7 @@ function Historico() {
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const buscarHistorico = async () => {
@@ -53,6 +55,12 @@ function Historico() {
                   <p className="info-row"><strong>Método de pagamento:</strong> {pedido.metodo_pagamento ?? "Não informado"}</p>
                   <p className="info-row"><strong>Taxa de entrega:</strong> {pedido.taxa_entrega ?? "Não informada"}</p>
                   <p className="info-row"><strong>Observação:</strong> {pedido.observacao ?? "Sem observação"}</p>
+                  <button
+                    className="btn-primary"
+                    onClick={() => navigate(`/pedido/${pedido.id}`)}
+                  >
+                    Ver detalhes
+                  </button>
                 </div>
               ))}
             </div>

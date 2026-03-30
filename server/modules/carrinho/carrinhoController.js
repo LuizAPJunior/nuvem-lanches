@@ -34,7 +34,7 @@ exports.updateQuantity = catchAsync(async (req, res) => {
   const data = await carrinhoService.updateQuantity(req.supabase, {
     userId: req.user.id,
     carrinhoId: req.params.id,
-    action: req.body.action,
+    quantidade: req.body.quantidade,
   });
   res.status(200).json(data);
 });

@@ -12,9 +12,9 @@ export const addItemCarrinho = async (itemId) => {
   return response.data;
 };
 
-export const updateQuantidade = async (id, action) => {
+export const updateQuantidade = async (id, quantidade) => {
   const response = await api.patch(`/carrinho/${id}`, {
-    action,
+    quantidade,
   });
   return response.data;
 };

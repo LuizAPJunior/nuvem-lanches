@@ -59,7 +59,7 @@ exports.deleteAllItems = async (supabase, { userId }) => {
 };
 
 //carrinhoId é o id  da "linha" do carrinho, não é id do item
-exports.updateQuantity = async (supabase, {userId, carrinhoId, action}) => {
+exports.updateQuantity = async (supabase, {userId, carrinhoId, quantidade}) => {
 
   //selecionar a quantidade do item   
   const { data, error } = await supabase
@@ -72,14 +72,14 @@ exports.updateQuantity = async (supabase, {userId, carrinhoId, action}) => {
   if (error) throw error;
   if (!data || data.length === 0) throw { status: 404, message: 'Nenhum item foi encontrado no carrinho.' };
   
-  let quantidadeAtualizada = 0;
-  if (action === 'adicionar') quantidadeAtualizada = data[0].quantidade + 1;  
-  else if (action === 'subtrair') quantidadeAtualizada = data[0].quantidade - 1;  
+  // let quantidadeAtualizada = 0;
+  // if (action === 'adicionar') quantidadeAtualizada = data[0].quantidade + 1;  
+  // else if (action === 'subtrair') quantidadeAtualizada = data[0].quantidade - 1;  
 
   //atualizar o valor do item
   const { data: quantityUpdated, error: quantityError } = await supabase
   .from('carrinho_itens') 
-  .update({quantidade: quantidadeAtualizada})
+  .update({quantidade})
   .eq('id', carrinhoId)
   .eq('perfil_id', userId)
   .select();

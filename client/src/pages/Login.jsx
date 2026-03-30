@@ -26,7 +26,7 @@ function Login() {
     try {
       await login(email, password);
       setFeedback({ type: "success", message: "Login realizado com sucesso!" });
-      setTimeout(() => navigate("/dashboard"), 700);
+      setTimeout(() => navigate("/"), 700);
     } catch (error) {
       setFeedback({ type: "error", message: error.message });
     } finally {
