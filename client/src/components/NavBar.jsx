@@ -195,7 +195,7 @@ export default function Navbar() {
     setLoggingOut(true);
     try {
       await logout();
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
