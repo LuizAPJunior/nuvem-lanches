@@ -10,6 +10,13 @@ Nuvem lanches é um sistema de pedidos que simula uma aplicação de delivery de
 * Docker
 * Supabase
 
+## Acesse a aplicação
+
+[Nuvem lanches](https://exquisite-kleicha-c17f69.netlify.app/) 
+
+[Nuvem Lanches api](https://nuvem-lanches.onrender.com/itens)
+
+
 ## Instalação e utilização local
 
 pre-requisito para instalação:
